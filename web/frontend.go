@@ -1,7 +1,7 @@
 package web
 
 import (
-	"blog/storage"
+	"github.com/hararudoka/blog/storage"
 	"html/template"
 	"io"
 	"net/http"

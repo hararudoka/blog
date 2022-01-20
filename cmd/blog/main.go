@@ -1,9 +1,9 @@
 package main
 
 import (
-	"blog/handler"
-	"blog/storage"
-	"blog/web"
+	"github.com/hararudoka/blog/handler"
+	"github.com/hararudoka/blog/storage"
+	"github.com/hararudoka/blog/web"
 	"html/template"
 
 	"github.com/labstack/echo/v4/middleware"

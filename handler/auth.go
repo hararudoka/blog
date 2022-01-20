@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"blog/storage"
-	"blog/web"
+	"github.com/hararudoka/blog/storage"
+	"github.com/hararudoka/blog/web"
 	"database/sql"
 	"fmt"
 	"math/rand"
