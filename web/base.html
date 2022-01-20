@@ -19,13 +19,13 @@
             <a class="nav-link" href="/contacts">meeee!</a>
         </li>
         {{if .IsAuth}}
-        {{if .CurUser.IsAdmin}}
+        {{if .Customer.IsAdmin}}
         <li class="nav-item">
             <a class="nav-link" href="/addPost">write post</a>
         </li>
         {{end}}
         <li class="nav-item">
-            <a class="nav-link" href="/users/{{.CurUser.ID}}">{{.CurUser.Name}}</a>
+            <a class="nav-link" href="/users/{{.CurUser.ID}}">{{.Customer.Name}}</a>
         </li>
         {{else }}
         <li class="nav-item">

@@ -47,7 +47,7 @@ func (s *CommentStorage) Comment(c echo.Context) error {
 	}
 
 	err = s.db.Comments.Insert(storage.Comment{
-		CustomerID: temp.CurUser.ID,
+		CustomerID: temp.Customer.ID,
 		PostID:     postID,
 		Content:    content,
 	})
