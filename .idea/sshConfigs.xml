@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="SshConfigs">
-    <configs>
-      <sshConfig host="158.101.217.16" id="391e3f36-452d-40c2-83cc-9dd104b1b286" keyPath="$USER_HOME$/Documents/ssh/lambda.key" port="22" nameFormat="DESCRIPTIVE" username="ubuntu" />
-    </configs>
-  </component>
-</project>
