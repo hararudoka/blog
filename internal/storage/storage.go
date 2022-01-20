@@ -15,8 +15,8 @@ type DB struct {
 	*sqlx.DB
 	Customers CustomerStorage
 	Posts     PostStorage
-	Comments CommentStorage
-	Auths    AuthStorage
+	Comments  CommentStorage
+	Auths     AuthStorage
 }
 
 func Open() (*DB, error) {

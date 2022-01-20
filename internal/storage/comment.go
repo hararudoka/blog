@@ -6,27 +6,25 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type (
-	CommentStorage interface {
-		ByPost(postID int) ([]Comment, error)
-		Insert(Comment) error
-	}
+type CommentStorage interface {
+	SliceByPostID(postID int) ([]Comment, error)
+	Insert(Comment) error
+}
 
-	Comments struct {
-		*sqlx.DB
-	}
+type Comments struct {
+	*sqlx.DB
+}
 
-	Comment struct {
-		Customer
-		ID         int
-		CustomerID int
-		PostID     int
-		Content   string
-		CreatedAt time.Time
-	}
-)
+type Comment struct {
+	Customer
+	ID         int
+	CustomerID int
+	PostID     int
+	Content    string
+	CreatedAt  time.Time
+}
 
-func (db *Comments) ByPost(postID int) ([]Comment, error) {
+func (db *Comments) SliceByPostID(postID int) ([]Comment, error) {
 	var comments []Comment
 
 	rows, err := db.Query("SELECT * FROM comment WHERE post_id=($1)", postID)

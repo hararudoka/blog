@@ -6,42 +6,40 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type (
-	CustomerStorage interface {
-		UserByID(id int) (user Customer, err error)
-		Exists(username string) (user Customer, err error)
-		Insert(user Customer) error
-	}
+type CustomerStorage interface {
+	GetByID(id int) (customer Customer, err error)
+	GetByName(name string) (customer Customer, err error)
+	Insert(customer Customer) error
+}
 
-	Customers struct {
-		*sqlx.DB
-	}
+type Customers struct {
+	*sqlx.DB
+}
 
-	Customer struct {
-		ID        int
-		Name      string
-		password  string
-		Role      string
-		IsAdmin   bool
-		CreatedAt time.Time
-	}
-)
+type Customer struct {
+	ID        int
+	Name      string
+	password  string
+	Role      string
+	IsAdmin   bool
+	CreatedAt time.Time
+}
 
-func (db *Customers) Insert(user Customer) error {
-	_, err := db.Exec("INSERT INTO customer (username, password, role, is_admin, created_at) VALUES ($1, $2, $3, $4, $5)", user.Name, user.password, user.Role, user.IsAdmin, time.Now())
+func (db *Customers) Insert(customer Customer) error {
+	_, err := db.Exec("INSERT INTO customer (username, password, role, is_admin, created_at) VALUES ($1, $2, $3, $4, $5)", customer.Name, customer.password, customer.Role, customer.IsAdmin, time.Now())
 	return err
 }
 
-func (db *Customers) UserByID(id int) (user Customer, err error) {
+func (db *Customers) GetByID(id int) (customer Customer, err error) {
 	row := db.QueryRow("SELECT * FROM customer WHERE id=($1)", id)
-	err = row.Scan(&user.ID, &user.Name, &user.password, &user.Role, &user.IsAdmin, &user.CreatedAt)
-	return user, err
+	err = row.Scan(&customer.ID, &customer.Name, &customer.password, &customer.Role, &customer.IsAdmin, &customer.CreatedAt)
+	return
 }
 
-func (db *Customers) Exists(username string) (user Customer, err error) {
+func (db *Customers) GetByName(username string) (customer Customer, err error) {
 	row := db.QueryRow("SELECT * FROM customer WHERE customer.username=($1)", username)
-	err = row.Scan(&user.ID, &user.Name, &user.password, &user.Role, &user.IsAdmin, &user.CreatedAt)
-	return user, err
+	err = row.Scan(&customer.ID, &customer.Name, &customer.password, &customer.Role, &customer.IsAdmin, &customer.CreatedAt)
+	return
 }
 
 func (u *Customer) Password() string {

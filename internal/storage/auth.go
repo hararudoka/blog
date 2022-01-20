@@ -6,47 +6,41 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type (
-	AuthStorage interface {
-		Insert(token string, userid int) error
-		UserByToken(token string) (Customer, error)
-		UserID(token string) (int, error)
-	}
+type AuthStorage interface {
+	Insert(token string, id int) error
+	GetCustomerByToken(token string) (Customer, error)
+	GetCustomerIDByToken(token string) (int, error)
+}
 
-	Auths struct {
-		*sqlx.DB
-	}
+type Auths struct {
+	*sqlx.DB
+}
 
-	Auth struct {
-		ID      int
-		Token   string
-		Expired time.Time
-	}
-)
+type Auth struct {
+	ID      int
+	Token   string
+	Expired time.Time
+}
 
-func (db *Auths) UserByToken(token string) (Customer, error) {
-	var user Customer
-
+func (db *Auths) GetCustomerByToken(token string) (customer Customer, err error) {
 	row := db.QueryRow("SELECT u.id, u.username, u.password, u.role, u.is_admin FROM public.customer AS u JOIN public.security AS t ON t.customer_id=u.id WHERE t.token=($1)", token)
-
-	err := row.Scan(&user.ID, &user.Name, &user.password, &user.Role, &user.IsAdmin)
+	err = row.Scan(&customer.ID, &customer.Name, &customer.password, &customer.Role, &customer.IsAdmin)
 	if err != nil {
 		return Customer{}, err
 	}
-	return user, nil
+	return
 }
 
-func (db *Auths) Insert(token string, userID int) error {
-	_, err := db.Exec("INSERT INTO security (token, customer_id) VALUES ($1, $2)", token, userID)
+func (db *Auths) Insert(token string, id int) error {
+	_, err := db.Exec("INSERT INTO security (token, customer_id) VALUES ($1, $2)", token, id)
 	return err
 }
 
-func (db *Auths) UserID(token string) (int, error) {
-	var id int
+func (db *Auths) GetCustomerIDByToken(token string) (id int, err error) {
 	row := db.QueryRow("SELECT security.customer_id FROM security WHERE token=($1)", token)
-	err := row.Scan(&id)
+	err = row.Scan(&id)
 	if err != nil {
 		return 0, err
 	}
-	return id, nil
+	return
 }

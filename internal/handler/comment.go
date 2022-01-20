@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"errors"
 	"github.com/hararudoka/blog/internal/storage"
 	"github.com/hararudoka/blog/web"
 	"net/http"
@@ -19,7 +19,7 @@ func (s *CommentStorage) REGISTER(h handler, g *echo.Group) {
 
 	g.GET("", s.LastComments)
 
-	m := Middleware(*s.db)
+	m := s.Middleware(*s.db)
 
 	g.GET("/addComment", s.AddComment, m)
 	g.POST("/addComment", s.Comment, m)
@@ -37,7 +37,7 @@ func (s *CommentStorage) Comment(c echo.Context) error {
 
 	content := c.FormValue("content")
 	if len([]byte(content)) > 200 {
-		temp.Error = fmt.Errorf("cлишком длинный комментарий")
+		temp.Error = errors.New("too long com")
 		return c.Render(http.StatusFound, "error", temp)
 	}
 

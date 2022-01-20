@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/hararudoka/blog/internal/storage"
 	"github.com/hararudoka/blog/web"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -19,24 +18,24 @@ type PostStorage struct {
 func (s *PostStorage) REGISTER(h handler, g *echo.Group) {
 	s.handler = h
 
-	g.GET("/", func(context echo.Context) error {
-		return context.Redirect(http.StatusFound, "/feed")
+	g.GET("/", func(ctx echo.Context) error {
+		return ctx.Redirect(http.StatusFound, "/feed")
 	})
 
 	g.GET("contacts", s.Contacts)
 	g.GET("feed", s.Feed)
 	g.GET("posts/:id", s.Post)
 
-	m := Middleware(*s.db)
+	m := s.Middleware(*s.db)
 
 	g.GET("addPost", s.WriteForm, m)
 	g.POST("addPost", s.WriteFromForm, m)
 }
 
-func (s *PostStorage) Feed(c echo.Context) error {
+func (s *PostStorage) Feed(ctx echo.Context) error {
 	// posts logic
 	var posts []storage.Post
-	n, err := s.db.Posts.PostCounting()
+	n, err := s.db.Posts.Count()
 	if err != nil {
 		return err
 	}
@@ -56,7 +55,7 @@ func (s *PostStorage) Feed(c echo.Context) error {
 		web.Temp
 		Posts []storage.Post
 	}
-	err = temp.DefaultTemp(c, s.db)
+	err = temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err
 	}
@@ -64,25 +63,25 @@ func (s *PostStorage) Feed(c echo.Context) error {
 	temp.Posts = posts
 	temp.PageTitle = "haraldka's blog"
 
-	return c.Render(http.StatusOK, "feed", temp)
+	return ctx.Render(http.StatusOK, "feed", temp)
 }
 
-func (s *PostStorage) WriteForm(c echo.Context) error {
+func (s *PostStorage) WriteForm(ctx echo.Context) error {
 	var temp web.Temp
-	err := temp.DefaultTemp(c, s.db)
+	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err
 	}
-	return c.Render(http.StatusOK, "addPost", temp)
+	return ctx.Render(http.StatusOK, "addPost", temp)
 }
 
-func (s *PostStorage) WriteFromForm(c echo.Context) error {
-	title := c.FormValue("title")
-	content := c.FormValue("content")
+func (s *PostStorage) WriteFromForm(ctx echo.Context) error {
+	title := ctx.FormValue("title")
+	content := ctx.FormValue("content")
 
-	cok, err := c.Cookie("token")
+	cok, err := ctx.Cookie("token")
 
-	customer, err := s.db.Auths.UserByToken(cok.Value)
+	customer, err := s.db.Auths.GetCustomerByToken(cok.Value)
 	if err != nil {
 		return err
 	}
@@ -91,7 +90,7 @@ func (s *PostStorage) WriteFromForm(c echo.Context) error {
 		return err
 	}
 
-	return c.Redirect(http.StatusFound, "feed")
+	return ctx.Redirect(http.StatusFound, "feed")
 }
 
 func (s *PostStorage) Post(c echo.Context) error {
@@ -120,26 +119,25 @@ func (s *PostStorage) Post(c echo.Context) error {
 }
 
 func (s *PostStorage) post(id int) (storage.Post, error) {
-	post, err := s.db.Posts.ByID(id)
+	post, err := s.db.Posts.GetByID(id)
 	if err == sql.ErrNoRows {
 		return storage.Post{Title: "удалён"}, nil
 	} else if err != nil {
 		return storage.Post{}, err
 	}
 
-	post.Customer, err = s.db.Customers.UserByID(post.CustomerID)
+	post.Customer, err = s.db.Customers.GetByID(post.CustomerID)
 	if err != nil {
 		return storage.Post{}, err
 	}
 
-	post.Comments, err = s.db.Comments.ByPost(post.ID)
+	post.Comments, err = s.db.Comments.SliceByPostID(post.ID)
 	if err != nil {
 		return storage.Post{}, err
 	}
 
 	for i, e := range post.Comments {
-		log.Println(e.CustomerID)
-		user, err := s.db.Customers.UserByID(e.CustomerID)
+		user, err := s.db.Customers.GetByID(e.CustomerID)
 		if err != nil && err != sql.ErrNoRows {
 			return storage.Post{}, err
 		}

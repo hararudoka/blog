@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	h := handler.NewHandler(handler.Handler{DB: db})
+	h := handler.New(handler.Handler{DB: db})
 
 	e := echo.New()
 	e.Renderer = t

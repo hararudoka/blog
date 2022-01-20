@@ -31,7 +31,7 @@ func (temp *Temp) DefaultTemp(c echo.Context, s *storage.DB) error {
 
 		temp.IsAuth = false
 	} else if err == nil {
-		user, err := s.Auths.UserByToken(cok.Value)
+		user, err := s.Auths.GetCustomerByToken(cok.Value)
 		if err != nil {
 			return err
 		}

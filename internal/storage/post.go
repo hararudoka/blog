@@ -6,30 +6,28 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type (
-	PostStorage interface {
-		Insert(data Post) error
-		PostCounting() (int, error)
-		ByID(id int) (Post, error)
-	}
+type PostStorage interface {
+	Insert(data Post) error
+	Count() (int, error)
+	GetByID(id int) (Post, error)
+}
 
-	Posts struct {
-		*sqlx.DB
-	}
+type Posts struct {
+	*sqlx.DB
+}
 
-	Post struct {
-		Customer
-		Comments  []Comment
-		ID         int
-		CustomerID int
-		Title      string
-		Content   string
-		CreatedAt time.Time
-		HumanTime string
-	}
-)
+type Post struct {
+	Customer
+	Comments   []Comment
+	ID         int
+	CustomerID int
+	Title      string
+	Content    string
+	CreatedAt  time.Time
+	HumanTime  string
+}
 
-func (db *Posts) ByID(id int) (Post, error) {
+func (db *Posts) GetByID(id int) (Post, error) {
 	var post Post
 
 	row := db.QueryRow("SELECT * FROM post WHERE id=($1)", id)
@@ -48,7 +46,7 @@ func (db *Posts) Insert(post Post) error {
 	return err
 }
 
-func (db *Posts) PostCounting() (int, error) {
+func (db *Posts) Count() (int, error) {
 	var n int
 	row := db.QueryRow(
 		"SELECT MAX(id) FROM post")

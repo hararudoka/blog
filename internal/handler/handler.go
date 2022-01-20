@@ -19,7 +19,7 @@ type handler struct {
 	db *storage.DB
 }
 
-func NewHandler(h Handler) *handler {
+func New(h Handler) *handler {
 	return &handler{
 		db: h.DB,
 	}
@@ -33,7 +33,7 @@ func (h handler) Register(group *echo.Group, service Service) {
 	service.REGISTER(h, group)
 }
 
-func (h handler) CustomHTTPErrorHandler(err error, c echo.Context) {
+func (h *handler) CustomHTTPErrorHandler(err error, c echo.Context) {
 	code := http.StatusInternalServerError
 	if he, ok := err.(*echo.HTTPError); ok {
 		code = he.Code
@@ -63,12 +63,12 @@ func (h handler) CustomHTTPErrorHandler(err error, c echo.Context) {
 	}
 }
 
-func Middleware(db storage.DB) func(echo.HandlerFunc) echo.HandlerFunc {
+func (h *handler) Middleware(db storage.DB) func(echo.HandlerFunc) echo.HandlerFunc {
 	return middleware.KeyAuthWithConfig(middleware.KeyAuthConfig{
 		KeyLookup: "cookie:token",
 
 		Validator: func(key string, c echo.Context) (bool, error) {
-			_, err := db.Auths.UserByToken(key)
+			_, err := db.Auths.GetCustomerByToken(key)
 			if err != nil {
 				return false, err
 			}

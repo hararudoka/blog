@@ -2,7 +2,6 @@ package handler
 
 import (
 	"database/sql"
-	"fmt"
 	"github.com/hararudoka/blog/internal/storage"
 	"github.com/hararudoka/blog/web"
 	"math/rand"
@@ -26,37 +25,35 @@ func (s *AuthService) REGISTER(h handler, g *echo.Group) {
 	g.POST("/register", s.RenderReg)
 }
 
-func (s *AuthService) Login(c echo.Context) error {
+func (s *AuthService) Login(ctx echo.Context) error {
 	var temp web.Temp
-	err := temp.DefaultTemp(c, s.db)
+	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err
 	}
-	return c.Render(http.StatusOK, "login", temp)
+	return ctx.Render(http.StatusOK, "login", temp)
 }
 
-func (s *AuthService) Reg(c echo.Context) error {
+func (s *AuthService) Reg(ctx echo.Context) error {
 	var temp web.Temp
-	err := temp.DefaultTemp(c, s.db)
+	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err
 	}
-	return c.Render(http.StatusOK, "register", temp)
+	return ctx.Render(http.StatusOK, "register", temp)
 }
 
-func (s *AuthService) RenderLogin(c echo.Context) error {
-	username := c.FormValue("username")
-	password := c.FormValue("password")
+func (s *AuthService) RenderLogin(ctx echo.Context) error {
+	username := ctx.FormValue("username")
+	password := ctx.FormValue("password")
 
-	user, err := s.db.Customers.Exists(username)
+	user, err := s.db.Customers.GetByName(username)
 	if err != nil {
-		fmt.Println(err)
-		return c.Redirect(http.StatusFound, "/404")
+		return ctx.Redirect(http.StatusFound, "/404")
 	}
 
 	if password != user.Password() {
-		fmt.Println("неверный пароль")
-		return c.Redirect(http.StatusFound, "/404")
+		return ctx.Redirect(http.StatusFound, "/404")
 	}
 
 	token := generateToken()
@@ -70,9 +67,9 @@ func (s *AuthService) RenderLogin(c echo.Context) error {
 	cookie.Name = "token"
 	cookie.Value = token
 	cookie.Expires = time.Now().Add(72 * time.Hour)
-	c.SetCookie(cookie)
+	ctx.SetCookie(cookie)
 
-	return c.Redirect(http.StatusFound, "/feed")
+	return ctx.Redirect(http.StatusFound, "/feed")
 }
 
 func generateToken() string {
@@ -86,17 +83,17 @@ func generateToken() string {
 	return string(b)
 }
 
-func (s *AuthService) RenderReg(c echo.Context) error {
-	username := c.FormValue("username")
-	password := c.FormValue("password")
+func (s *AuthService) RenderReg(ctx echo.Context) error {
+	name := ctx.FormValue("username")
+	password := ctx.FormValue("password")
 
-	_, err := s.db.Customers.Exists(username)
+	_, err := s.db.Customers.GetByName(name)
 	if err == sql.ErrNoRows {
-		var u storage.Customer
-		u.Name = username
-		u.SetPassword(password)
-		u.Role = "user"
-		err = s.db.Customers.Insert(u)
+		var c storage.Customer
+		c.Name = name
+		c.SetPassword(password)
+		c.Role = "user"
+		err = s.db.Customers.Insert(c)
 		if err != nil {
 			return err
 		}
@@ -104,5 +101,5 @@ func (s *AuthService) RenderReg(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.Redirect(http.StatusFound, "/feed")
+	return ctx.Redirect(http.StatusFound, "/feed")
 }

@@ -36,7 +36,7 @@ func (s *CustomerStorage) GetUser(c echo.Context) error {
 		return err
 	}
 
-	customer, err := s.db.Customers.UserByID(id)
+	customer, err := s.db.Customers.GetByID(id)
 	if err == sql.ErrNoRows {
 		return c.Render(http.StatusOK, "404", temp)
 	} else if err != nil {
