@@ -1,0 +1,44 @@
+{{define "login"}}
+{{template "base" .}}
+
+<h2>Войти</h2>
+<form action="/login" method="POST">
+  <label>
+    <input type="text" name="username">
+  </label>
+  <br>
+
+  <label>
+    <input type="password" name="password">
+  </label>
+  <br>
+
+  <input type="submit" value="Войти">
+</form>
+
+{{template "basedown" .}}
+{{end}}
+
+
+
+{{define "register"}}
+{{template "base" .}}
+<h2>Зарегестрироваться</h2>
+<form action="/register" method="POST">
+  <label>
+    <input type="text" name="username">
+  </label>
+  <br>
+
+  <label>
+    <input type="password" name="password">
+  </label>
+  <br>
+
+  <input type="submit" value="Продолжить">
+</form>
+{{template "basedown" .}}
+{{end}}
+
+
+

@@ -1,0 +1,65 @@
+{{define "feed"}}
+{{template "base" .}}
+<h3 class="container-fluid" style="text-align: center">{{.PageTitle}}</h3><br>
+{{range $index, $element := .Posts}}
+<div class="container-fluid">
+    {{if $element.User.Name}}
+    <h5 class="text-lowercase text-decoration-none"><a class="text-decoration-none link-dark" href="/posts/{{$element.ID}}">{{$element.Title}}⛓</a></h5>
+    <p style="white-space: pre-line;">{{$element.Content}}</p>
+    <p class="fst-italic" style="text-align: right">by <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a> | {{$element.HumanTime}}</p>
+
+    {{else}}
+    <h5 class="text-lowercase text-decoration-none">{{$element.Title}}</h5>
+    {{end}}
+    <hr>
+</div>
+{{end}}
+
+{{template "basedown"}}
+{{end}}
+
+
+
+
+{{define "post"}}
+{{template "base" .}}
+
+<h2>{{.Title}}</h2>
+<p style="white-space: pre-line;">{{.Content}}<br></p>
+
+
+<p class="fst-italic">by <a href="/users/{{.User.ID}}">{{.User.Name}}</a> | {{.HumanTime}}</p>
+
+<hr>
+<p>Комментарии:</p>
+
+<a href="/comments/addComment?postID={{.ID}}">Добавить комментарий...</a><br>
+
+{{range $index, $element := .Comments}}
+[{{$element.User.Role}}] <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a>:<br>
+<p style="white-space: pre-line;">{{$element.Content}}<br></p><br><br>
+
+{{end}}
+{{template "basedown"}}
+{{end}}
+
+
+
+
+{{define "addPost"}}
+{{template "base" .}}
+
+
+<h2>Написать пост</h2>
+<form action="/addPost" method="POST">
+    <div>Название<label>
+        <input type="text" name="title">
+    </label></div>
+    <div><label>
+        <textarea name="content"></textarea>
+    </label></div>
+    <div><input type="submit" value="Создать"></div>
+</form>
+
+{{template "basedown"}}
+{{end}}

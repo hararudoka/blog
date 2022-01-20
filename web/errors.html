@@ -1,0 +1,24 @@
+{{define "404"}}
+{{template "base" .}}
+<h2>404 страница не найдена</h2>
+{{template "basedown"}}
+{{end}}
+
+
+
+{{define "error"}}
+{{template "base" .}}
+<h2>Ошибка</h2>
+{{.Error}}
+{{template "basedown"}}
+{{end}}
+
+
+
+{{define "loginError"}}
+{{template "base" .}}
+<h2>Ошибка авторизации</h2>
+<a href="/login">еще раз</a>
+{{.Error}}
+{{template "basedown" .}}
+{{end}}

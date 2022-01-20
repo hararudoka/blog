@@ -1,0 +1,25 @@
+{{define "addComment"}}
+{{template "base" .}}
+<h2>Добавить комментарий</h2><br>
+<form action="/comments/addComment?postID={{.PostID}}" method="POST">
+  <div><label>
+    <textarea name="content"></textarea>
+  </label></div>
+  <div><input type="submit" value="Создать"></div>
+</form>
+{{template "basedown" .}}
+{{end}}
+
+
+{{define "comments"}}
+{{template "base" .}}
+<h2>последние комментарии</h2><br>
+
+{{range $index, $element := .Comments}}
+[{{$element.User.Role}}] <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a>:<br>
+<p style="white-space: pre-line;">{{$element.Content}}<br></p><br><br>
+
+{{end}}
+
+{{template "basedown" .}}
+{{end}}
