@@ -1,6 +1,6 @@
 {{define "addComment"}}
 {{template "base" .}}
-<h2>Добавить комментарий</h2><br>
+<h2>add com</h2><br>
 <form action="/comments/addComment?postID={{.PostID}}" method="POST">
   <div><label>
     <textarea name="content"></textarea>
@@ -13,7 +13,7 @@
 
 {{define "comments"}}
 {{template "base" .}}
-<h2>последние комментарии</h2><br>
+<h2>last coms</h2><br>
 
 {{range $index, $element := .Comments}}
 [{{$element.User.Role}}] <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a>:<br>

@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"github.com/hararudoka/blog/storage"
-	"github.com/hararudoka/blog/web"
 	"database/sql"
 	"fmt"
+	"github.com/hararudoka/blog/internal/storage"
+	"github.com/hararudoka/blog/web"
 	"math/rand"
 	"net/http"
 	"time"
@@ -48,7 +48,7 @@ func (s *AuthService) RenderLogin(c echo.Context) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
-	user, err := s.db.Users.Exists(username)
+	user, err := s.db.Customers.Exists(username)
 	if err != nil {
 		fmt.Println(err)
 		return c.Redirect(http.StatusFound, "/404")
@@ -90,13 +90,13 @@ func (s *AuthService) RenderReg(c echo.Context) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
-	_, err := s.db.Users.Exists(username)
+	_, err := s.db.Customers.Exists(username)
 	if err == sql.ErrNoRows {
-		var u storage.User
+		var u storage.Customer
 		u.Name = username
 		u.SetPassword(password)
 		u.Role = "user"
-		err = s.db.Users.Insert(u)
+		err = s.db.Customers.Insert(u)
 		if err != nil {
 			return err
 		}

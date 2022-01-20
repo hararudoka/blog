@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/hararudoka/blog/handler"
-	"github.com/hararudoka/blog/storage"
+	"github.com/hararudoka/blog/internal/handler"
+	"github.com/hararudoka/blog/internal/storage"
 	"github.com/hararudoka/blog/web"
 	"html/template"
 
@@ -32,7 +32,7 @@ func main() {
 
 	h.Register(e.Group(""), &handler.PostStorage{})
 
-	h.Register(e.Group("/users"), &handler.UserStorage{})
+	h.Register(e.Group("/users"), &handler.CustomerStorage{})
 	h.Register(e.Group("/comments"), &handler.CommentStorage{})
 	h.Register(e.Group(""), &handler.AuthService{})
 

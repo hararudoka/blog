@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/hararudoka/blog/storage"
+	storage2 "github.com/hararudoka/blog/internal/storage"
 	"html/template"
 	"io"
 	"net/http"
@@ -20,15 +20,15 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 
 type Temp struct {
 	PageTitle string
-	CurUser   storage.User
+	CurUser   storage2.Customer
 	IsAuth    bool
 	Error     error
 }
 
-func (temp *Temp) DefaultTemp(c echo.Context, s *storage.DB) error {
+func (temp *Temp) DefaultTemp(c echo.Context, s *storage2.DB) error {
 	cok, err := c.Cookie("token")
 	if err == http.ErrNoCookie {
-		temp.CurUser = storage.User{ID: 0}
+		temp.CurUser = storage2.Customer{ID: 0}
 
 		temp.IsAuth = false
 	} else if err == nil {

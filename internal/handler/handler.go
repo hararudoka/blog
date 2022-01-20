@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/hararudoka/blog/storage"
-	"github.com/hararudoka/blog/web"
 	"fmt"
+	"github.com/hararudoka/blog/internal/storage"
+	"github.com/hararudoka/blog/web"
 	"net/http"
 
 	"github.com/labstack/echo/v4/middleware"

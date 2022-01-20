@@ -9,7 +9,7 @@ import (
 type (
 	AuthStorage interface {
 		Insert(token string, userid int) error
-		UserByToken(token string) (User, error)
+		UserByToken(token string) (Customer, error)
 		UserID(token string) (int, error)
 	}
 
@@ -24,14 +24,14 @@ type (
 	}
 )
 
-func (db *Auths) UserByToken(token string) (User, error) {
-	var user User
+func (db *Auths) UserByToken(token string) (Customer, error) {
+	var user Customer
 
 	row := db.QueryRow("SELECT u.id, u.username, u.password, u.role, u.is_admin FROM public.customer AS u JOIN public.security AS t ON t.customer_id=u.id WHERE t.token=($1)", token)
 
 	err := row.Scan(&user.ID, &user.Name, &user.password, &user.Role, &user.IsAdmin)
 	if err != nil {
-		return User{}, err
+		return Customer{}, err
 	}
 	return user, nil
 }

@@ -1,29 +1,29 @@
 package handler
 
 import (
-	"github.com/hararudoka/blog/storage"
-	"github.com/hararudoka/blog/web"
 	"database/sql"
+	"github.com/hararudoka/blog/internal/storage"
+	"github.com/hararudoka/blog/web"
 	"net/http"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-type UserStorage struct {
+type CustomerStorage struct {
 	handler
 }
 
-func (s *UserStorage) REGISTER(h handler, g *echo.Group) {
+func (s *CustomerStorage) REGISTER(h handler, g *echo.Group) {
 	s.handler = h
 
 	g.GET("/:id", s.GetUser)
 }
 
-func (s *UserStorage) GetUser(c echo.Context) error {
+func (s *CustomerStorage) GetUser(c echo.Context) error {
 	var temp struct {
 		web.Temp
-		storage.User
+		storage.Customer
 	}
 
 	err := temp.DefaultTemp(c, s.db)
@@ -36,14 +36,14 @@ func (s *UserStorage) GetUser(c echo.Context) error {
 		return err
 	}
 
-	user, err := s.db.Users.UserByID(id)
+	customer, err := s.db.Customers.UserByID(id)
 	if err == sql.ErrNoRows {
 		return c.Render(http.StatusOK, "404", temp)
 	} else if err != nil {
 		return err
 	}
 
-	temp.User = user
+	temp.Customer = customer
 
 	return c.Render(http.StatusOK, "user", temp)
 }

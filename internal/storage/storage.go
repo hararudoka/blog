@@ -13,8 +13,8 @@ import (
 
 type DB struct {
 	*sqlx.DB
-	Users    UserStorage
-	Posts    PostStorage
+	Customers CustomerStorage
+	Posts     PostStorage
 	Comments CommentStorage
 	Auths    AuthStorage
 }
@@ -44,10 +44,10 @@ func Open() (*DB, error) {
 	}
 	log.Println("connected")
 	return &DB{
-		DB:       db,
-		Users:    &Users{DB: db},
-		Posts:    &Posts{DB: db},
-		Comments: &Comments{DB: db},
-		Auths:    &Auths{DB: db},
+		DB:        db,
+		Customers: &Customers{DB: db},
+		Posts:     &Posts{DB: db},
+		Comments:  &Comments{DB: db},
+		Auths:     &Auths{DB: db},
 	}, nil
 }

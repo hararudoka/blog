@@ -18,11 +18,11 @@ type (
 	}
 
 	Post struct {
-		User
+		Customer
 		Comments  []Comment
-		ID        int
-		UserID    int
-		Title     string
+		ID         int
+		CustomerID int
+		Title      string
 		Content   string
 		CreatedAt time.Time
 		HumanTime string
@@ -33,7 +33,7 @@ func (db *Posts) ByID(id int) (Post, error) {
 	var post Post
 
 	row := db.QueryRow("SELECT * FROM post WHERE id=($1)", id)
-	err := row.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &post.CreatedAt)
+	err := row.Scan(&post.ID, &post.CustomerID, &post.Title, &post.Content, &post.CreatedAt)
 	if err != nil {
 		return Post{}, err
 	}
@@ -44,7 +44,7 @@ func (db *Posts) ByID(id int) (Post, error) {
 }
 
 func (db *Posts) Insert(post Post) error {
-	_, err := db.Exec("INSERT INTO post (customer_id, title, content, created_at) VALUES ($1, $2, $3, $4)", post.UserID, post.Title, post.Content, time.Now())
+	_, err := db.Exec("INSERT INTO post (customer_id, title, content, created_at) VALUES ($1, $2, $3, $4)", post.CustomerID, post.Title, post.Content, time.Now())
 	return err
 }
 

@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/hararudoka/blog/storage"
-	"github.com/hararudoka/blog/web"
 	"fmt"
+	"github.com/hararudoka/blog/internal/storage"
+	"github.com/hararudoka/blog/web"
 	"net/http"
 	"strconv"
 
@@ -47,9 +47,9 @@ func (s *CommentStorage) Comment(c echo.Context) error {
 	}
 
 	err = s.db.Comments.Insert(storage.Comment{
-		UserID:  temp.CurUser.ID,
-		PostID:  postID,
-		Content: content,
+		CustomerID: temp.CurUser.ID,
+		PostID:     postID,
+		Content:    content,
 	})
 
 	return c.Redirect(http.StatusFound, "/posts/"+c.QueryParam("postID"))

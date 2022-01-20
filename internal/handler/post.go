@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"github.com/hararudoka/blog/storage"
-	"github.com/hararudoka/blog/web"
 	"database/sql"
+	"github.com/hararudoka/blog/internal/storage"
+	"github.com/hararudoka/blog/web"
 	"log"
 	"net/http"
 	"strconv"
@@ -62,7 +62,7 @@ func (s *PostStorage) Feed(c echo.Context) error {
 	}
 
 	temp.Posts = posts
-	temp.PageTitle = "блог харальдки"
+	temp.PageTitle = "haraldka's blog"
 
 	return c.Render(http.StatusOK, "feed", temp)
 }
@@ -82,11 +82,11 @@ func (s *PostStorage) WriteFromForm(c echo.Context) error {
 
 	cok, err := c.Cookie("token")
 
-	user, err := s.db.Auths.UserByToken(cok.Value)
+	customer, err := s.db.Auths.UserByToken(cok.Value)
 	if err != nil {
 		return err
 	}
-	err = s.db.Posts.Insert(storage.Post{UserID: user.ID, Title: title, Content: content, CreatedAt: time.Now()})
+	err = s.db.Posts.Insert(storage.Post{CustomerID: customer.ID, Title: title, Content: content, CreatedAt: time.Now()})
 	if err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (s *PostStorage) post(id int) (storage.Post, error) {
 		return storage.Post{}, err
 	}
 
-	post.User, err = s.db.Users.UserByID(post.UserID)
+	post.Customer, err = s.db.Customers.UserByID(post.CustomerID)
 	if err != nil {
 		return storage.Post{}, err
 	}
@@ -138,13 +138,13 @@ func (s *PostStorage) post(id int) (storage.Post, error) {
 	}
 
 	for i, e := range post.Comments {
-		log.Println(e.UserID)
-		user, err := s.db.Users.UserByID(e.UserID)
+		log.Println(e.CustomerID)
+		user, err := s.db.Customers.UserByID(e.CustomerID)
 		if err != nil && err != sql.ErrNoRows {
 			return storage.Post{}, err
 		}
 
-		post.Comments[i].User = user
+		post.Comments[i].Customer = user
 	}
 
 	return post, nil

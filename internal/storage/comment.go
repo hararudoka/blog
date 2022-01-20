@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"log"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -18,10 +17,10 @@ type (
 	}
 
 	Comment struct {
-		User
-		ID        int
-		UserID    int
-		PostID    int
+		Customer
+		ID         int
+		CustomerID int
+		PostID     int
 		Content   string
 		CreatedAt time.Time
 	}
@@ -37,18 +36,17 @@ func (db *Comments) ByPost(postID int) ([]Comment, error) {
 
 	for rows.Next() {
 		var temp Comment
-		err = rows.Scan(&temp.ID, &temp.PostID, &temp.UserID, &temp.Content, &temp.CreatedAt)
+		err = rows.Scan(&temp.ID, &temp.PostID, &temp.CustomerID, &temp.Content, &temp.CreatedAt)
 		if err != nil {
 			return []Comment{}, err
 		}
 		comments = append(comments, temp)
 	}
 
-	log.Println(comments)
 	return comments, err
 }
 
 func (db *Comments) Insert(comment Comment) error {
-	_, err := db.Exec("INSERT INTO comment (customer_id, post_id, content, created_at) VALUES ($1, $2, $3, $4)", comment.UserID, comment.PostID, comment.Content, time.Now())
+	_, err := db.Exec("INSERT INTO comment (customer_id, post_id, content, created_at) VALUES ($1, $2, $3, $4)", comment.CustomerID, comment.PostID, comment.Content, time.Now())
 	return err
 }

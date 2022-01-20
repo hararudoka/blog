@@ -3,10 +3,10 @@
 <h3 class="container-fluid" style="text-align: center">{{.PageTitle}}</h3><br>
 {{range $index, $element := .Posts}}
 <div class="container-fluid">
-    {{if $element.User.Name}}
+    {{if $element.Customer.Name}}
     <h5 class="text-lowercase text-decoration-none"><a class="text-decoration-none link-dark" href="/posts/{{$element.ID}}">{{$element.Title}}⛓</a></h5>
     <p style="white-space: pre-line;">{{$element.Content}}</p>
-    <p class="fst-italic" style="text-align: right">by <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a> | {{$element.HumanTime}}</p>
+    <p class="fst-italic" style="text-align: right">by <a href="/users/{{$element.Customer.ID}}">{{$element.Customer.Name}}</a> | {{$element.HumanTime}}</p>
 
     {{else}}
     <h5 class="text-lowercase text-decoration-none">{{$element.Title}}</h5>
@@ -28,15 +28,15 @@
 <p style="white-space: pre-line;">{{.Content}}<br></p>
 
 
-<p class="fst-italic">by <a href="/users/{{.User.ID}}">{{.User.Name}}</a> | {{.HumanTime}}</p>
+<p class="fst-italic">by <a href="/users/{{.Customer.ID}}">{{.User.Name}}</a> | {{.HumanTime}}</p>
 
 <hr>
-<p>Комментарии:</p>
+<p>coms:</p>
 
-<a href="/comments/addComment?postID={{.ID}}">Добавить комментарий...</a><br>
+<a href="/comments/addComment?postID={{.ID}}">add com</a><br>
 
 {{range $index, $element := .Comments}}
-[{{$element.User.Role}}] <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a>:<br>
+[{{$element.User.Role}}] <a href="/users/{{$element.Customer.ID}}">{{$element.Customer.Name}}</a>:<br>
 <p style="white-space: pre-line;">{{$element.Content}}<br></p><br><br>
 
 {{end}}
@@ -50,15 +50,15 @@
 {{template "base" .}}
 
 
-<h2>Написать пост</h2>
+<h2>write a post</h2>
 <form action="/addPost" method="POST">
-    <div>Название<label>
+    <div>title<label>
         <input type="text" name="title">
     </label></div>
     <div><label>
         <textarea name="content"></textarea>
     </label></div>
-    <div><input type="submit" value="Создать"></div>
+    <div><input type="submit" value="write!"></div>
 </form>
 
 {{template "basedown"}}
