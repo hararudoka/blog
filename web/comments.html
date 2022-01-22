@@ -16,7 +16,7 @@
 <h2>last coms</h2><br>
 
 {{range $index, $element := .Comments}}
-[{{$element.User.Role}}] <a href="/users/{{$element.User.ID}}">{{$element.User.Name}}</a>:<br>
+[{{$element.Customer.Role}}] <a href="/users/{{$element.Customer.ID}}">{{$element.Customer.Name}}</a>:<br>
 <p style="white-space: pre-line;">{{$element.Content}}<br></p><br><br>
 
 {{end}}

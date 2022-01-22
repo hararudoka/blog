@@ -67,7 +67,9 @@ func (s *PostStorage) Feed(ctx echo.Context) error {
 }
 
 func (s *PostStorage) WriteForm(ctx echo.Context) error {
-	var temp web.Temp
+	var temp struct {
+		web.Temp
+	}
 	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err

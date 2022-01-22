@@ -17,12 +17,12 @@ type Customers struct {
 }
 
 type Customer struct {
-	ID        int
-	Name      string
-	password  string
-	Role      string
-	IsAdmin   bool
-	CreatedAt time.Time
+	ID        int `db:"id"`
+	Name      string `db:"username"`
+	password  string `db:"password"`
+	Role      string `db:"role"`
+	IsAdmin   bool `db:"is_admin"`
+	CreatedAt time.Time `db:"created_at"`
 }
 
 func (db *Customers) Insert(customer Customer) error {
@@ -33,12 +33,14 @@ func (db *Customers) Insert(customer Customer) error {
 func (db *Customers) GetByID(id int) (customer Customer, err error) {
 	row := db.QueryRow("SELECT * FROM customer WHERE id=($1)", id)
 	err = row.Scan(&customer.ID, &customer.Name, &customer.password, &customer.Role, &customer.IsAdmin, &customer.CreatedAt)
+	//TODO no rows
 	return
 }
 
 func (db *Customers) GetByName(username string) (customer Customer, err error) {
 	row := db.QueryRow("SELECT * FROM customer WHERE customer.username=($1)", username)
 	err = row.Scan(&customer.ID, &customer.Name, &customer.password, &customer.Role, &customer.IsAdmin, &customer.CreatedAt)
+	//TODO no rows
 	return
 }
 

@@ -24,6 +24,7 @@ func main() {
 	h := handler.New(handler.Handler{DB: db})
 
 	e := echo.New()
+	e.File("/favicon.ico", "web/favicon.ico")
 	e.Renderer = t
 	e.HTTPErrorHandler = h.CustomHTTPErrorHandler
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/hararudoka/blog/internal/storage"
 	"github.com/hararudoka/blog/web"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -23,6 +24,7 @@ func (s *CommentStorage) REGISTER(h handler, g *echo.Group) {
 
 	g.GET("/addComment", s.AddComment, m)
 	g.POST("/addComment", s.Comment, m)
+
 }
 
 func (s *CommentStorage) Comment(c echo.Context) error {
@@ -79,5 +81,14 @@ func (s *CommentStorage) LastComments(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.Render(http.StatusFound, "comments", temp)
+
+
+	temp.Comments, err = s.db.Comments.GetAll()
+	if err != nil {
+		return err
+	}
+
+	log.Println(temp.Comments[0].Name)
+
+	return c.Render(http.StatusOK, "comments", temp)
 }

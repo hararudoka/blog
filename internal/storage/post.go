@@ -19,22 +19,23 @@ type Posts struct {
 type Post struct {
 	Customer
 	Comments   []Comment
-	ID         int
-	CustomerID int
-	Title      string
-	Content    string
-	CreatedAt  time.Time
+	ID         int `db:"id"`
+	CustomerID int `db:"customer_id"`
+	Title      string `db:"title"`
+	Content    string `db:"content"`
+	CreatedAt  time.Time `db:"created_at"`
 	HumanTime  string
 }
 
 func (db *Posts) GetByID(id int) (Post, error) {
 	var post Post
 
-	row := db.QueryRow("SELECT * FROM post WHERE id=($1)", id)
-	err := row.Scan(&post.ID, &post.CustomerID, &post.Title, &post.Content, &post.CreatedAt)
-	if err != nil {
+	err := db.QueryRow("SELECT * FROM post WHERE id=($1)", id).Scan(&post.ID, &post.CustomerID, &post.Title, &post.Content, &post.CreatedAt)
+	if err != nil { //TODO no rows
 		return Post{}, err
 	}
+	db.DB.Begin()
+
 
 	post.HumanTime = post.CreatedAt.Format("January 2, 2006")
 
@@ -50,6 +51,6 @@ func (db *Posts) Count() (int, error) {
 	var n int
 	row := db.QueryRow(
 		"SELECT MAX(id) FROM post")
-	err := row.Scan(&n)
+	err := row.Scan(&n) //TODO no rows
 	return n, err
 }

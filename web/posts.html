@@ -28,7 +28,7 @@
 <p style="white-space: pre-line;">{{.Content}}<br></p>
 
 
-<p class="fst-italic">by <a href="/users/{{.Customer.ID}}">{{.User.Name}}</a> | {{.HumanTime}}</p>
+<p class="fst-italic">by <a href="/users/{{.Temp.Customer.ID}}">{{.Temp.Customer.Name}}</a> | {{.HumanTime}}</p>
 
 <hr>
 <p>coms:</p>
@@ -36,7 +36,7 @@
 <a href="/comments/addComment?postID={{.ID}}">add com</a><br>
 
 {{range $index, $element := .Comments}}
-[{{$element.User.Role}}] <a href="/users/{{$element.Customer.ID}}">{{$element.Customer.Name}}</a>:<br>
+[{{$element.Customer.Role}}] <a href="/users/{{$element.Customer.ID}}">{{$element.Customer.Name}}</a>:<br>
 <p style="white-space: pre-line;">{{$element.Content}}<br></p><br><br>
 
 {{end}}

@@ -25,7 +25,7 @@ type Auth struct {
 func (db *Auths) GetCustomerByToken(token string) (customer Customer, err error) {
 	row := db.QueryRow("SELECT u.id, u.username, u.password, u.role, u.is_admin FROM public.customer AS u JOIN public.security AS t ON t.customer_id=u.id WHERE t.token=($1)", token)
 	err = row.Scan(&customer.ID, &customer.Name, &customer.password, &customer.Role, &customer.IsAdmin)
-	if err != nil {
+	if err != nil { //TODO no rows
 		return Customer{}, err
 	}
 	return
@@ -39,7 +39,7 @@ func (db *Auths) Insert(token string, id int) error {
 func (db *Auths) GetCustomerIDByToken(token string) (id int, err error) {
 	row := db.QueryRow("SELECT security.customer_id FROM security WHERE token=($1)", token)
 	err = row.Scan(&id)
-	if err != nil {
+	if err != nil { //TODO no rows
 		return 0, err
 	}
 	return
