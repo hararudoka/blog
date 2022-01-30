@@ -14,11 +14,11 @@ type Env struct {
 
 // LoadEnv returns all env variables needed in code
 func LoadEnv() (env Env) {
-	env.Password = os.Getenv("PASSWORD")
-	env.Username = os.Getenv("USERNAME")
-	env.DBName = os.Getenv("DBNAME")
-	env.Hostname = os.Getenv("HOSTNAME")
-	env.Mode = os.Getenv("MODE")
+	env.Password = os.Getenv("DB_PASSWORD")
+	env.Username = os.Getenv("DB_USERNAME")
+	env.DBName = os.Getenv("DB_NAME")
+	env.Hostname = os.Getenv("DB_HOSTNAME")
+	env.Mode = os.Getenv("DB_MODE")
 
 	return
 }

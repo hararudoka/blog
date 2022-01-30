@@ -19,6 +19,8 @@ func Execute() {
 
 	dbConfig := config.LoadEnv()
 
+	log.Println(dbConfig)
+
 	db, err := storage.Open(dbConfig)
 	if err != nil {
 		log.Fatal("DB connection fails: ", err)

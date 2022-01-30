@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/hararudoka/blog/internal/config"
 	"github.com/jmoiron/sqlx"
@@ -19,6 +20,8 @@ type DB struct {
 func Open(e config.Env) (*DB, error) {
 	conn := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s",
 		e.Username, e.Password, e.Hostname, e.DBName, e.Mode)
+
+	log.Println(conn)
 
 	db, err := sqlx.Connect("postgres", conn)
 	if err != nil {
