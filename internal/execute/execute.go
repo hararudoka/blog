@@ -12,10 +12,10 @@ import (
 func Execute() {
 	log := logrus.New()
 
-	conf, err := config.LoadConfig()
-	if err != nil {
-		log.Fatal("Environment loading fails")
-	}
+	//conf, err := config.LoadConfig()
+	//if err != nil {
+	//	log.Fatal("Config loading fails")
+	//}
 
 	dbConfig := config.LoadEnv()
 
@@ -39,5 +39,5 @@ func Execute() {
 	h.NewGroup(e.Group("/comments"), &http.CommentStorage{})
 	h.NewGroup(e.Group(""), &http.AuthService{})
 
-	e.Logger.Fatal(e.Start(":"+conf.Port))
+	e.Logger.Fatal(e.Start(":80"))
 }

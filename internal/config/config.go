@@ -7,7 +7,7 @@ import (
 )
 
 type Config struct {
-	Port string `yaml:"port"`
+
 }
 
 // LoadConfig not used at the moment
