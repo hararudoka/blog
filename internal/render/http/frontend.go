@@ -1,10 +1,11 @@
-package web
+package http
 
 import (
-	"github.com/hararudoka/blog/internal/storage"
 	"html/template"
 	"io"
 	"net/http"
+
+	"github.com/hararudoka/blog/internal/storage"
 
 	"github.com/labstack/echo/v4"
 )

@@ -1,36 +1,31 @@
-package handler
+package http
 
 import (
 	"fmt"
-	"github.com/hararudoka/blog/internal/storage"
-	"github.com/hararudoka/blog/web"
 	"net/http"
 
+	"github.com/hararudoka/blog/internal/storage"
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/labstack/echo/v4"
 )
 
-type Handler struct {
-	DB *storage.DB
-}
-
 type handler struct {
 	db *storage.DB
 }
 
-func New(h Handler) *handler {
+func New(db *storage.DB) *handler {
 	return &handler{
-		db: h.DB,
+		db: db,
 	}
 }
 
-type Service interface {
-	REGISTER(h handler, g *echo.Group)
+type Router interface {
+	Register(h handler, g *echo.Group)
 }
 
-func (h handler) Register(group *echo.Group, service Service) {
-	service.REGISTER(h, group)
+func (h handler) NewGroup(group *echo.Group, service Router) {
+	service.Register(h, group)
 }
 
 func (h *handler) CustomHTTPErrorHandler(err error, c echo.Context) {
@@ -42,7 +37,7 @@ func (h *handler) CustomHTTPErrorHandler(err error, c echo.Context) {
 	c.Logger().Error(err)
 
 	var temp struct {
-		web.Temp
+		Temp
 		Error error
 	}
 
@@ -80,7 +75,7 @@ func (h *handler) Middleware(db storage.DB) func(echo.HandlerFunc) echo.HandlerF
 				return c.Redirect(http.StatusFound, "/../login")
 			}
 
-			var temp web.Temp
+			var temp Temp
 
 			e := temp.DefaultTemp(c, &db)
 			if e != nil {

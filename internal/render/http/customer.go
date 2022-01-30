@@ -1,12 +1,11 @@
-package handler
+package http
 
 import (
 	"database/sql"
-	"github.com/hararudoka/blog/internal/storage"
-	"github.com/hararudoka/blog/web"
 	"net/http"
 	"strconv"
 
+	"github.com/hararudoka/blog/internal/storage"
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,7 +13,7 @@ type CustomerStorage struct {
 	handler
 }
 
-func (s *CustomerStorage) REGISTER(h handler, g *echo.Group) {
+func (s *CustomerStorage) Register(h handler, g *echo.Group) {
 	s.handler = h
 
 	g.GET("/:id", s.GetUser)
@@ -22,7 +21,7 @@ func (s *CustomerStorage) REGISTER(h handler, g *echo.Group) {
 
 func (s *CustomerStorage) GetUser(c echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 		storage.Customer
 	}
 

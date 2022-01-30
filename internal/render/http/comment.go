@@ -1,13 +1,12 @@
-package handler
+package http
 
 import (
 	"errors"
-	"github.com/hararudoka/blog/internal/storage"
-	"github.com/hararudoka/blog/web"
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/hararudoka/blog/internal/storage"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,7 +14,7 @@ type CommentStorage struct {
 	handler
 }
 
-func (s *CommentStorage) REGISTER(h handler, g *echo.Group) {
+func (s *CommentStorage) Register(h handler, g *echo.Group) {
 	s.handler = h
 
 	g.GET("", s.LastComments)
@@ -29,7 +28,7 @@ func (s *CommentStorage) REGISTER(h handler, g *echo.Group) {
 
 func (s *CommentStorage) Comment(c echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 		Error error
 	}
 	err := temp.DefaultTemp(c, s.db)
@@ -59,7 +58,7 @@ func (s *CommentStorage) Comment(c echo.Context) error {
 
 func (s *CommentStorage) AddComment(c echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 		PostID string
 	}
 	err := temp.DefaultTemp(c, s.db)
@@ -74,7 +73,7 @@ func (s *CommentStorage) AddComment(c echo.Context) error {
 
 func (s *CommentStorage) LastComments(c echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 		Comments []storage.Comment
 	}
 	err := temp.DefaultTemp(c, s.db)

@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/jmoiron/sqlx"
@@ -51,6 +52,9 @@ func (db *Posts) Count() (int, error) {
 	var n int
 	row := db.QueryRow(
 		"SELECT MAX(id) FROM post")
-	err := row.Scan(&n) //TODO no rows
+	err := row.Scan(&n)
+	if err == sql.ErrNoRows {
+
+	}
 	return n, err
 }

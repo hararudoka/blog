@@ -1,13 +1,12 @@
-package handler
+package http
 
 import (
 	"database/sql"
-	"github.com/hararudoka/blog/internal/storage"
-	"github.com/hararudoka/blog/web"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/hararudoka/blog/internal/storage"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,7 +14,7 @@ type PostStorage struct {
 	handler
 }
 
-func (s *PostStorage) REGISTER(h handler, g *echo.Group) {
+func (s *PostStorage) Register(h handler, g *echo.Group) {
 	s.handler = h
 
 	g.GET("/", func(ctx echo.Context) error {
@@ -52,7 +51,7 @@ func (s *PostStorage) Feed(ctx echo.Context) error {
 	}
 
 	var temp struct {
-		web.Temp
+		Temp
 		Posts []storage.Post
 	}
 	err = temp.DefaultTemp(ctx, s.db)
@@ -68,7 +67,7 @@ func (s *PostStorage) Feed(ctx echo.Context) error {
 
 func (s *PostStorage) WriteForm(ctx echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 	}
 	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
@@ -97,7 +96,7 @@ func (s *PostStorage) WriteFromForm(ctx echo.Context) error {
 
 func (s *PostStorage) Post(c echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 		storage.Post
 	}
 	err := temp.DefaultTemp(c, s.db)
@@ -152,7 +151,7 @@ func (s *PostStorage) post(id int) (storage.Post, error) {
 
 func (s *PostStorage) Contacts(c echo.Context) error {
 	var temp struct {
-		web.Temp
+		Temp
 	}
 	err := temp.DefaultTemp(c, s.db)
 	if err != nil {

@@ -1,13 +1,12 @@
-package handler
+package http
 
 import (
 	"database/sql"
-	"github.com/hararudoka/blog/internal/storage"
-	"github.com/hararudoka/blog/web"
 	"math/rand"
 	"net/http"
 	"time"
 
+	"github.com/hararudoka/blog/internal/storage"
 	"github.com/labstack/echo/v4"
 )
 
@@ -15,7 +14,7 @@ type AuthService struct {
 	handler
 }
 
-func (s *AuthService) REGISTER(h handler, g *echo.Group) {
+func (s *AuthService) Register(h handler, g *echo.Group) {
 	s.handler = h
 
 	g.GET("/login", s.Login)
@@ -26,7 +25,7 @@ func (s *AuthService) REGISTER(h handler, g *echo.Group) {
 }
 
 func (s *AuthService) Login(ctx echo.Context) error {
-	var temp web.Temp
+	var temp Temp
 	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err
@@ -35,7 +34,7 @@ func (s *AuthService) Login(ctx echo.Context) error {
 }
 
 func (s *AuthService) Reg(ctx echo.Context) error {
-	var temp web.Temp
+	var temp Temp
 	err := temp.DefaultTemp(ctx, s.db)
 	if err != nil {
 		return err
