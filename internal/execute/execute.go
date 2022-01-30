@@ -21,7 +21,7 @@ func Execute() {
 
 	db, err := storage.Open(dbConfig)
 	if err != nil {
-		log.Fatal("DB connection fails")
+		log.Fatal("DB connection fails: ", err)
 	}
 
 	h := http.New(db)
