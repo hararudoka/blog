@@ -1,6 +1,6 @@
 services:
   server:
-    build: .
+    image: haraldka/blog:latest
     env_file:
       - .env
     ports:
